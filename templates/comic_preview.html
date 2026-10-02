@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }} - Comic Preview | ComicCraft</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700;800&family=Bangers&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          ComicCraft
+          <span class="brand-tag">Preview</span>
+        </div>
+      </a>
+      
+      <nav class="nav-links">
+        <a href="/" class="btn btn-secondary btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+          New Comic
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Preview Header & Metadata -->
+    <section class="preview-header">
+      <div class="preview-title-area">
+        <h1>{{ title }}</h1>
+        <div class="preview-meta-tags">
+          <span class="meta-tag" style="border-color: var(--accent-purple); color: var(--accent-purple);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+            Hero: {{ character_name }}
+          </span>
+          <span class="meta-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4.5 14h15L12 2Z"/></svg>
+            Setting: {{ setting }}
+          </span>
+          <span class="meta-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+            Tone: {{ tone }}
+          </span>
+          <span class="meta-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
+            Art Style: {{ art_style }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <button 
+          id="downloadComicBtn" 
+          class="btn btn-primary" 
+          data-pdf-url="{{ pdf_url }}" 
+          data-title="{{ title }}" 
+          data-char="{{ character_name }}"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download Your Comic as PDF
+        </button>
+      </div>
+    </section>
+
+    <!-- Comic Panels List -->
+    <div class="panels-container">
+      {% for panel in layout %}
+      <article class="comic-panel-card">
+        
+        <!-- Left Column: Illustration -->
+        <div class="panel-image-wrapper">
+          <span class="panel-badge">PANEL {{ panel.panel_number }} OF {{ layout|length }}</span>
+          <img 
+            src="{{ panel.image_path }}" 
+            alt="Illustration for {{ panel.title }}" 
+            class="panel-image"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- Right Column: Story & Dialogue Content -->
+        <div class="panel-content">
+          <div>
+            <!-- Panel Title -->
+            <h2 class="panel-header-title">{{ panel.title }}</h2>
+
+            <!-- Scene Description in Italics -->
+            {% if panel.scene_description %}
+            <div class="scene-desc-box" style="margin-top: 1rem;">
+              {{ panel.scene_description }}
+            </div>
+            {% endif %}
+
+            <!-- Comic Ambient Caption -->
+            {% if panel.caption %}
+            <div class="caption-box" style="margin-top: 1rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink: 0; margin-top: 2px;">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span>{{ panel.caption }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Speech & Dialogue Bubbles -->
+            {% if panel.dialogue %}
+            <div class="speech-bubble" style="margin-top: 1rem;">
+              {{ panel.dialogue }}
+            </div>
+            {% elif panel.narration %}
+            <div class="speech-bubble" style="margin-top: 1rem; font-weight: 500;">
+              {{ panel.narration }}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Prompt Reference Details (Collapsible) -->
+          <div class="prompt-details">
+            <details>
+              <summary>View AI Art Prompt Reference</summary>
+              <p>{{ panel.image_prompt }}</p>
+            </details>
+          </div>
+
+        </div>
+
+      </article>
+      {% endfor %}
+    </div>
+
+    <!-- Sticky Bottom Action Bar -->
+    <div class="action-bar-sticky">
+      <div>
+        <h3 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--text-main);">
+          Loved this comic adventure?
+        </h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Download the high-resolution printable PDF or create another unique comic.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="m13 18 6-6-6-6"/></svg>
+          Create Another Comic
+        </a>
+        <button 
+          onclick="document.getElementById('downloadComicBtn').click()" 
+          class="btn btn-primary"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF Now
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div>
+        <strong>ComicCraft</strong> &copy; 2026. Made with Google Gemini & Diffusers.
+      </div>
+      <div>
+        <a href="{{ pdf_url }}" target="_blank" style="color: var(--accent-purple); text-decoration: none; font-weight: 700; margin-right: 1.5rem;">Direct PDF Link</a>
+        <a href="/" style="color: var(--text-muted); text-decoration: none; font-weight: 600;">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JS -->
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
